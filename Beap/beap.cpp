@@ -23,7 +23,7 @@ public:
     void startExchange(int index, int current_level);
     void endExchange(int index, int current_level);
 
-    void BeapHEAPIFY(int i);
+    void BeapHEAPIFY();
     void insert(float key);
     void search(float key);
     void maximum();
@@ -72,9 +72,9 @@ int Beap::blockEnd(int current_level)
 }
 
 // left parent
-int Beap::leftParent(int index, int current_level)
+int Beap::leftParent(int index, int current_index_level)
 {
-    int i = current_level;
+    int i = current_index_level;
     return index - i;
 
     if (test)
@@ -87,9 +87,9 @@ int Beap::leftParent(int index, int current_level)
 }
 
 // right parent
-int Beap::rightParent(int index, int current_level)
+int Beap::rightParent(int index, int current_index_level)
 {
-    int i = current_level;
+    int i = current_index_level;
     return index - i + 1;
 
     if (test)
@@ -140,18 +140,54 @@ Beap::~Beap()
 // concept : have a loop , compare every elements in beap
 // from current_height in(depth)
 // every element in each level
-void Beap::BeapHEAPIFY(int beap_size)
+void Beap::BeapHEAPIFY()
 {
 
-    int index = beap_size - 1; // start fÎrom 0
+    int index_current;
     int current_level;
-    
 
-    int p1_index = leftParent(index, current_level);
-    int p2_index = rightParent(index, current_level);
+    int index_left_child;
+    int index_right_child;
 
-    for (current_level = 0; current_level < depth(beap_size); current_level++)
+    // depth(beap_size) - 1 , last level have no child
+    for (current_level = 1; current_level <= depth(beap_size) - 1; current_level++)
     {
+        int last_level = current_level + 1;
+        int last_level_element_amount = beap_size - 1 - blockStart(last_level);
+        int compare_end = blockStart(current_level) + last_level_element_amount;
+        int last = blockEnd(current_level);
+        if (current_level == depth(beap_size) - 1)
+        {
+            last = compare_end;
+        }
+
+        for (index_current = blockStart(current_level); index_current <= last; index_current++) //
+        {
+
+            // if last_level is not full, have child or no have child2
+            // condition1 (last 2nd level) + condition2(last index is not the index in end of this level)
+            if ((current_level == depth(beap_size) - 1) && index_current == compare_end) //
+            {
+
+                index_left_child = index_current + (current_level + 1) - 1;
+                // just pass that next if  ( :
+                index_right_child = index_left_child;
+            }
+            else
+            {
+                index_left_child = index_current + (current_level + 1) - 1;
+                index_right_child = index_current + (current_level + 1);
+            }
+
+            if (arr[index_current] >= arr[index_left_child] || arr[index_current] >= arr[index_right_child])
+            {
+                // swap with the smaller one
+                if (arr[index_left_child] >= arr[index_right_child])
+                    exchange(&arr[index_current], &arr[index_right_child]);
+                else
+                    exchange(&arr[index_current], &arr[index_left_child]);
+            }
+        }
     }
 }
 
@@ -255,10 +291,11 @@ void Beap::search(float key)
             // need to think when should move to the next line
             // last_index = beap_size -1  - blockStart(depth(beap_size)) = how many elements in last level
             // current_level_start = blockstart(current_level) +last_....
-            // condition1 + condition2(when need to jump to next) + condition3 (no need move)
+            // condition1 + condition2(when need to jump to next) + condition3 (to the left bound)
 
             int last_level_element_amount = beap_size - 1 - blockStart(depth(beap_size));
             int current_level_start = blockStart(current_level) + last_level_element_amount;
+            // index start from 0
             if (current_level == depth(index + 1) && index != current_level_start && index != blockStart(current_level))
             {
                 index--;
@@ -296,7 +333,7 @@ void Beap::maximum()
 {
     int index = beap_size - 1;
     int max_key = index;
-    while (index != blockStart(depth(beap_size)))
+    while (index != blockStart(depth(beap_size) - 1))
     {
         if (arr[max_key] < arr[index])
         {
@@ -321,7 +358,7 @@ void Beap::extract()
     minimum();
     arr[0] = arr[beap_size - 1];
     beap_size--;
-    BeapHEAPIFY(beap_size);
+    BeapHEAPIFY();
     printBeap();
 }
 
@@ -360,9 +397,10 @@ int main()
     // bp.insert(19.7);
     // bp.insert(19.4);
 
-    // bp.printBeap();
+    bp.printBeap();
+
     // bp.maximum();
     bp.extract();
-
+    bp.maximum();
     return 0;
 }
