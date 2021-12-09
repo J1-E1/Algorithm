@@ -350,7 +350,7 @@ void Beap::maximum()
 
 void Beap::minimum()
 {
-    cout << "Max : " << arr[0] << " - [" << 0 << "]" << endl;
+    cout << "Min : " << arr[0] << " - [" << 0 << "]" << endl;
 }
 
 void Beap::extract()
@@ -394,13 +394,11 @@ int main()
     bp.insert(7.6);
     bp.insert(9.1);
     bp.insert(19.1);
-    // bp.insert(19.7);
-    // bp.insert(19.4);
 
     bp.printBeap();
-
-    // bp.maximum();
-    bp.extract();
     bp.maximum();
+    bp.minimum();
+    // bp.extract();
+
     return 0;
 }
