@@ -2,12 +2,12 @@
 
 ## Some parameters
 
-i = current level, i = elements in this level
-start = (i*(i-1)/2+1)
-end = (i*(i+1)/2)
-left parent = index - i -1
-right parent = index - i
-(When index = start or end, left or right parent +1, some parent nodes will be ignored)
+1. i = current level, i = elements in this level
+2. start = (i\*(i-1)/2+1)
+3. end = (i\*(i+1)/2)
+4. left parent = index - i -1
+5. right parent = index - i
+   (When index = start or end, left or right parent +1, some parent nodes will be ignored)
 
 ## Functions
 
